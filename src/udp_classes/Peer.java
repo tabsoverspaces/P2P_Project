@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Peer {
 
+    private String name;
+
     private ArrayList<Peer> listOfConnectedPeers;
 
     private InetAddress ipAddress;
@@ -84,5 +86,21 @@ public class Peer {
         this.listOfConnectedPeers.remove(peer);
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public InetAddress getIpAddress() {
+        return this.ipAddress;
+    }
+
+    public void printPeerData() {
+        System.out.println("Peer name : " + this.name);
+        System.out.println("Peer address : " + this.ipAddress.toString());
+    }
 
 }
