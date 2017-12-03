@@ -44,4 +44,20 @@ public class ContentLayeredPane extends JLayeredPane implements CreatableCompone
         this.chatPanel.setVisible(false);
         this.peersPanel.setVisible(true);
     }
+
+    public ChatPanel getChatPanel() {
+        return chatPanel;
+    }
+
+    public void setChatPanel(ChatPanel chatPanel) {
+        this.chatPanel = chatPanel;
+    }
+
+    public PeersPanel getPeersPanel() {
+        return peersPanel;
+    }
+
+    public void setPeersPanel(PeersPanel peersPanel) {
+        this.peersPanel = peersPanel;
+    }
 }

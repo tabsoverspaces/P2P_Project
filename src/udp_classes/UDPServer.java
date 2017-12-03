@@ -1,20 +1,51 @@
 package udp_classes;
 
-import java.net.DatagramSocket;
+import gui.MainFrame;
+
+import java.io.IOException;
+import java.net.*;
 
 public class UDPServer extends Thread {
 
-
+    private final int portNumber = 6969;
+    private MainFrame mainFrame;
+    private Peer mainPeer;
     // main server socket
     private DatagramSocket socket;
+    private DatagramPacket packet;
     // data buffer
-    private byte[] buffer;
-
+    private byte[] buffer = new byte[1024];
     private int receivingPort;
     private boolean runningFlag;
 
-    public UDPServer() {
+    /**
+     * Base constructor
+     *
+     * @param peer
+     */
+    public UDPServer(Peer peer) {
 
+        this.mainPeer = peer;
+
+        try {
+            this.socket = new DatagramSocket(6969,
+                    InetAddress.getByName(Launcher.ipadr.getLocalIPAddress()));
+            System.out.println("Server socket successfully created");
+
+
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
     }
 
     /**
@@ -24,6 +55,43 @@ public class UDPServer extends Thread {
     @Override
     public void run() {
 
+        System.out.println("Server is running");
+        System.out.println("Server address " + this.socket.getLocalAddress());
+
+        while (this.runningFlag) {
+            System.out.println("WHY");
+
+            packet = new DatagramPacket(buffer, buffer.length);
+
+            try {
+                System.out.println("Before socket receival");
+                socket.receive(packet);
+                System.out.println("Packet received");
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            this.mainFrame.getPanel().getLayeredPane().getChatPanel().getTextArea()
+                    .append(this.formatChatMessage(packet));
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(this.runningFlag);
+    }
+
+    public void startServer() {
+        this.runningFlag = true;
+
+        // start new thread for this server
+        Thread runningThread = new Thread(this);
+
+        runningThread.start();
     }
 
 
@@ -41,6 +109,15 @@ public class UDPServer extends Thread {
      */
     private void pauseServer() {
         this.runningFlag = false;
+    }
+
+    private String formatChatMessage(DatagramPacket p) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Message sent by : " + p.getAddress().toString() + "\n");
+        sb.append("Message content :" + p.getData() + "\n");
+
+        return sb.toString();
     }
 
 

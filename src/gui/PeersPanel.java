@@ -28,4 +28,20 @@ public class PeersPanel extends JPanel implements CreatableComponents {
         this.add(this.addPeerButton);
 
     }
+
+    public JTextField getIpAddressField() {
+        return ipAddressField;
+    }
+
+    public void setIpAddressField(JTextField ipAddressField) {
+        this.ipAddressField = ipAddressField;
+    }
+
+    public JButton getAddPeerButton() {
+        return addPeerButton;
+    }
+
+    public void setAddPeerButton(JButton addPeerButton) {
+        this.addPeerButton = addPeerButton;
+    }
 }

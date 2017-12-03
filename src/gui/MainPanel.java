@@ -39,4 +39,23 @@ public class MainPanel extends JPanel implements CreatableComponents {
         });
     }
 
+    public ControlPanel getControlPanel() {
+        return controlPanel;
+    }
+
+    public void setControlPanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
+    }
+
+    public ContentLayeredPane getLayeredPane() {
+        return layeredPane;
+    }
+
+    public void setLayeredPane(ContentLayeredPane layeredPane) {
+        this.layeredPane = layeredPane;
+    }
+
+    public void clearFields() {
+        this.layeredPane.getPeersPanel().getIpAddressField().setText("");
+    }
 }
