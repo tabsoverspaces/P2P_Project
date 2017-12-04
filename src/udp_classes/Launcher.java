@@ -32,6 +32,7 @@ public class Launcher {
 
         MainFrame frame = new MainFrame(peer);
 
+        peer.printPeerData();
 
     }
 }

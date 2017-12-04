@@ -1,10 +1,13 @@
 package gui;
 
+import gui.custom_components.JTextAreaCustom;
+import utility.SystemOutListener;
+
 import javax.swing.*;
 
 public class ChatPanel extends JPanel implements CreatableComponents {
 
-    private JTextArea textArea;
+    private JTextAreaCustom textArea;
     private JTextField textField;
     private JButton sendButton;
 
@@ -19,7 +22,7 @@ public class ChatPanel extends JPanel implements CreatableComponents {
     @Override
     public void createComponents() {
 
-        this.textArea = new JTextArea();
+        this.textArea = new JTextAreaCustom();
         this.textArea.setBounds(0, 0, 780, 490);
         // diff = 740 - 680 = 60
 
@@ -30,6 +33,9 @@ public class ChatPanel extends JPanel implements CreatableComponents {
         this.sendButton.setBounds(710, 500, 70, 30);
 
         this.addComponents();
+
+        // add system out listener
+        SystemOutListener.GetSingleton().AttachSystemOutObserver(this.textArea);
 
     }
 
@@ -44,10 +50,10 @@ public class ChatPanel extends JPanel implements CreatableComponents {
     }
 
     public JTextArea getTextArea() {
-        return textArea;
+        return this.textArea;
     }
 
-    public void setTextArea(JTextArea textArea) {
+    public void setTextArea(JTextAreaCustom textArea) {
         this.textArea = textArea;
     }
 

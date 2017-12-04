@@ -33,26 +33,27 @@ public class MainFrame extends JFrame {
         this.revalidate();
 
         // add listeners
+//        this.addListenersToButtons();
+
+
         this.addListenersToButtons();
-
-
     }
 
     public MainPanel getPanel() {
-        return panel;
+        return this.panel;
     }
 
     public void setPanel(MainPanel panel) {
         this.panel = panel;
     }
 
-    public Peer getMainPeer() {
-        return this.mainPeer;
-    }
-
-    public void setMainPeer(Peer mainPeer) {
-        this.mainPeer = mainPeer;
-    }
+//    public Peer getMainPeer() {
+//        return this.mainPeer;
+//    }
+//
+//    public void setMainPeer(Peer mainPeer) {
+//        this.mainPeer = mainPeer;
+//    }
 
     public void addListenersToButtons() {
         this.panel.getLayeredPane().getPeersPanel().getAddPeerButton()
@@ -69,7 +70,7 @@ public class MainFrame extends JFrame {
                         return; // return
                     } else { // continue if true
                         // do stuff
-                        MainFrame.this.mainPeer.addPeer(input);
+                        this.mainPeer.addPeer(input);
 
                     }
 
@@ -80,7 +81,7 @@ public class MainFrame extends JFrame {
 
                     // get text
                     String text = MainFrame.this.panel.getLayeredPane().getChatPanel().getTextField().getText();
-                    MainFrame.this.mainPeer.sendMessage(text);
+                    this.mainPeer.sendMessage(text);
 
                 });
     }
@@ -94,5 +95,9 @@ public class MainFrame extends JFrame {
         }
 
         return null;
+    }
+
+    public void print() {
+        System.out.println("SUP BITCH MAIN FRAME LAST METHOD");
     }
 }

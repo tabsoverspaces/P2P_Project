@@ -57,26 +57,14 @@ public class UDPClient extends Thread {
         runningClient.start();
     }
 
-    public void sendMessage(String message, Peer target, int portNumber) {
-
-        DatagramPacket packet = new DatagramPacket(message.getBytes(), message.getBytes().length
-                , target.getIpAddress(), portNumber);
-
-        try {
-            this.socket.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void sendMessage(String message, InetAddress address, int portNumber) {
-        DatagramPacket packet = new DatagramPacket(message.getBytes(), message.getBytes().length
-                , address, portNumber);
+        DatagramPacket packet = new DatagramPacket(message.getBytes(),
+                message.getBytes().length,
+                address, portNumber);
 
         try {
             this.socket.send(packet);
 
-            System.out.println("Message sent successfully");
         } catch (IOException e) {
             e.printStackTrace();
         }

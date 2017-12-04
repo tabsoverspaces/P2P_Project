@@ -48,7 +48,7 @@ public class MainPanel extends JPanel implements CreatableComponents {
     }
 
     public ContentLayeredPane getLayeredPane() {
-        return layeredPane;
+        return this.layeredPane;
     }
 
     public void setLayeredPane(ContentLayeredPane layeredPane) {
@@ -57,5 +57,9 @@ public class MainPanel extends JPanel implements CreatableComponents {
 
     public void clearFields() {
         this.layeredPane.getPeersPanel().getIpAddressField().setText("");
+    }
+
+    public void print() {
+        System.out.println("SUP BITCH MAIN PANEL LAST METHOD");
     }
 }

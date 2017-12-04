@@ -59,22 +59,24 @@ public class UDPServer extends Thread {
         System.out.println("Server address " + this.socket.getLocalAddress());
 
         while (this.runningFlag) {
-            System.out.println("WHY");
 
+            buffer = new byte[1024];
             packet = new DatagramPacket(buffer, buffer.length);
 
             try {
-                System.out.println("Before socket receival");
                 socket.receive(packet);
-                System.out.println("Packet received");
+                // System.out.println("Packet received"); // put this in the logger
+
+                System.out.println(this.formatChatMessage(packet));
+
+//                this.mainFrame.getPanel().getLayeredPane().getChatPanel().getTextArea()
+//                        .append(this.formatChatMessage(packet));
 
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            this.mainFrame.getPanel().getLayeredPane().getChatPanel().getTextArea()
-                    .append(this.formatChatMessage(packet));
 
             try {
                 Thread.sleep(100);
@@ -115,7 +117,7 @@ public class UDPServer extends Thread {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Message sent by : " + p.getAddress().toString() + "\n");
-        sb.append("Message content :" + p.getData() + "\n");
+        sb.append("Message content : " + new String(p.getData()) + "\n");
 
         return sb.toString();
     }

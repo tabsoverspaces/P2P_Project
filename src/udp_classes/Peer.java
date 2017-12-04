@@ -2,12 +2,11 @@ package udp_classes;
 
 import gui.MainFrame;
 
-import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Peer {
 
@@ -18,7 +17,7 @@ public class Peer {
     private String name;
     private ArrayList<Peer> listOfConnectedPeers;
     private InetAddress ipAddress;
-    private ArrayList<InetAddress> addresses;
+    private HashSet<InetAddress> addresses;
     private UDPServer serverThread;
     private UDPClient clientThread;
     private ArrayList<DatagramSocket> listOfSockets;
@@ -32,7 +31,7 @@ public class Peer {
     public Peer() {
         this.listOfConnectedPeers = new ArrayList<>();
         this.listOfSockets = new ArrayList<>();
-        this.addresses = new ArrayList<>();
+        this.addresses = new HashSet<>();
 
         // add target peers
 
@@ -80,26 +79,13 @@ public class Peer {
         this.name = name;
     }
 
-    public MainFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public void setMainFrame(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-    }
-
-    public UDPClient getClientThread() {
-        return clientThread;
-    }
-
-    public void setClientThread(UDPClient clientThread) {
-        this.clientThread = clientThread;
-    }
-
+    /**
+     * Method used to send a message to all known peers
+     *
+     * @param message
+     */
     public void sendMessage(String message) {
         for (InetAddress addr : this.addresses) {
-
-            System.out.println("Sending message to " + addr.toString());
 
             this.clientThread.sendMessage(message, addr, 6969);
         }
@@ -131,54 +117,23 @@ public class Peer {
     }
 
     /**
-     * Method used to add a peer to  this peer's list
-     * and also create a socket for it
-     *
-     * @param peer
-     */
-    private void addPeer(Peer peer, int portNumber) {
-        try {
-            DatagramSocket s = new DatagramSocket(portNumber, peer.getIpAddress());
-
-            this.listOfConnectedPeers.add(peer);
-            this.listOfSockets.add(s);
-
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Compared to the previous method, this one only takes a string as a address
-     * , then creates a peer instance and only then it invokes the previous method
+     * Method used to add a peer to the list of known list of the
+     * current(main) peer
      *
      * @param address
      */
-    public void addPeer(String address, int portNumber) {
-
-        // create peer from address
-        Peer p = new Peer(address);
-
-        // then use previous method
-        this.addPeer(p, portNumber);
-
-        // print info
-        System.out.println("New peer successfully added");
-        System.out.println("Peer info : ");
-        p.printPeerData();
-    }
-
     public void addPeer(String address) {
         try {
             InetAddress addr = InetAddress.getByName(address);
-            this.addresses.add(addr);
+            if (!this.addresses.contains(addr)) {
+
+                this.addresses.add(addr);
+                System.out.println("Successfully added peer : " + addr.toString());
+            }
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
-        this.addingSuccessful();
     }
 
     /**
@@ -216,9 +171,6 @@ public class Peer {
         System.out.println("Peer name : " + this.name);
         System.out.println("Peer address : " + this.ipAddress.toString());
     }
-
-    private void addingSuccessful() {
-        System.out.println("Peer address added successfully\n");
-    }
-
 }
+
+
