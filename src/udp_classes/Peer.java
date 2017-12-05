@@ -1,6 +1,7 @@
 package udp_classes;
 
 import gui.MainFrame;
+import utility.PeerHandler;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -12,8 +13,11 @@ public class Peer {
 
 //    public static int portNumber = 6969;
 
-    private MainFrame mainFrame;
+    // the path where the peer file is stored
+    private static final String savefile = "Data/peer_list.txt";
+    private static PeerHandler peerHandler = new PeerHandler(savefile);
 
+    private MainFrame mainFrame;
     private String name;
     private ArrayList<Peer> listOfConnectedPeers;
     private InetAddress ipAddress;
@@ -21,8 +25,6 @@ public class Peer {
     private UDPServer serverThread;
     private UDPClient clientThread;
     private ArrayList<DatagramSocket> listOfSockets;
-    private int outgoingPort;
-    private int incomingPort;
 
     /**
      * Initializing constructor, used in all subsequent constructors
@@ -128,6 +130,8 @@ public class Peer {
             if (!this.addresses.contains(addr)) {
 
                 this.addresses.add(addr);
+
+                this.getPeerHandler().storePeer(addr);
                 System.out.println("Successfully added peer : " + addr.toString());
             }
 
@@ -170,6 +174,19 @@ public class Peer {
     public void printPeerData() {
         System.out.println("Peer name : " + this.name);
         System.out.println("Peer address : " + this.ipAddress.toString());
+    }
+
+    public HashSet<InetAddress> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(HashSet<InetAddress> addresses) {
+        this.addresses = addresses;
+    }
+
+    public PeerHandler getPeerHandler() {
+        return peerHandler;
+
     }
 }
 

@@ -6,8 +6,6 @@ import udp_classes.Peer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.net.ServerSocket;
 
 public class MainFrame extends JFrame {
 
@@ -32,9 +30,6 @@ public class MainFrame extends JFrame {
         this.repaint();
         this.revalidate();
 
-        // add listeners
-//        this.addListenersToButtons();
-
 
         this.addListenersToButtons();
     }
@@ -46,14 +41,6 @@ public class MainFrame extends JFrame {
     public void setPanel(MainPanel panel) {
         this.panel = panel;
     }
-
-//    public Peer getMainPeer() {
-//        return this.mainPeer;
-//    }
-//
-//    public void setMainPeer(Peer mainPeer) {
-//        this.mainPeer = mainPeer;
-//    }
 
     public void addListenersToButtons() {
         this.panel.getLayeredPane().getPeersPanel().getAddPeerButton()
@@ -71,9 +58,7 @@ public class MainFrame extends JFrame {
                     } else { // continue if true
                         // do stuff
                         this.mainPeer.addPeer(input);
-
                     }
-
                 });
 
         this.panel.getLayeredPane().getChatPanel().getSendButton()
@@ -82,19 +67,7 @@ public class MainFrame extends JFrame {
                     // get text
                     String text = MainFrame.this.panel.getLayeredPane().getChatPanel().getTextField().getText();
                     this.mainPeer.sendMessage(text);
-
                 });
-    }
-
-    @Deprecated
-    private Integer findRandomOpenPort() {
-        try (ServerSocket socket = new ServerSocket(0);) {
-            return socket.getLocalPort();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public void print() {

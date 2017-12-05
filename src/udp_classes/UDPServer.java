@@ -56,7 +56,8 @@ public class UDPServer extends Thread {
     public void run() {
 
         System.out.println("Server is running");
-        System.out.println("Server address " + this.socket.getLocalAddress());
+        System.out.println("Server address " + this.socket.getLocalAddress() + "\n");
+        
 
         while (this.runningFlag) {
 
@@ -67,10 +68,10 @@ public class UDPServer extends Thread {
                 socket.receive(packet);
                 // System.out.println("Packet received"); // put this in the logger
 
-                System.out.println(this.formatChatMessage(packet));
+                // check to see if sending address is known
+                this.checkPeerList(packet.getAddress());
 
-//                this.mainFrame.getPanel().getLayeredPane().getChatPanel().getTextArea()
-//                        .append(this.formatChatMessage(packet));
+                System.out.println(this.formatChatMessage(packet));
 
 
             } catch (IOException e) {
@@ -120,6 +121,18 @@ public class UDPServer extends Thread {
         sb.append("Message content : " + new String(p.getData()) + "\n");
 
         return sb.toString();
+    }
+
+    private void checkPeerList(InetAddress address) {
+        if (!this.mainPeer.getAddresses().contains(address)) {
+
+            // add address to address list
+            this.mainPeer.getAddresses().add(address);
+
+            // invoke peerhandler add address method
+            this.mainPeer.getPeerHandler().storePeer(address);
+
+        }
     }
 
 

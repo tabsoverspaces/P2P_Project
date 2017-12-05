@@ -22,6 +22,7 @@ public class RandomStringGenerator {
             inter.append(c);
         }
 
+        inter.append(" (randomly generated)");
         return inter.toString();
     }
 

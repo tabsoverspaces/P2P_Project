@@ -33,7 +33,11 @@ public class UDPClient extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Client is running");
+
+        System.out.println("Client is running\n");
+
+        // load peers here
+        this.mainPeer.setAddresses(this.mainPeer.getPeerHandler().loadPeers());
 
         while (this.runningFlag) {
 //            System.out.println("WHY CLIENT THREAD RUN METHOD");

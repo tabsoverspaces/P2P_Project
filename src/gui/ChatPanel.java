@@ -23,8 +23,8 @@ public class ChatPanel extends JPanel implements CreatableComponents {
     public void createComponents() {
 
         this.textArea = new JTextAreaCustom();
+        this.textArea.setEditable(false);
         this.textArea.setBounds(0, 0, 780, 490);
-        // diff = 740 - 680 = 60
 
         this.textField = new JTextField();
         this.textField.setBounds(0, 500, 700, 30);

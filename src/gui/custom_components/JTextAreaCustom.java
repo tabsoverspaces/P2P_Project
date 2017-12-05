@@ -7,6 +7,6 @@ import javax.swing.*;
 public class JTextAreaCustom extends JTextArea implements SystemOutListener.ISystemOutObserver {
     @Override
     public void HandleSystemOut(String message) {
-        this.append(message + "\n\n");
+        this.append(message + "\n");
     }
 }

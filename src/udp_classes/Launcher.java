@@ -24,15 +24,14 @@ public class Launcher {
         // with his ip address
         // the port number is already hard-coded into the app
         Peer peer = new Peer(peerName, new IPAddressRetriever().getLocalIPAddress());
-        System.out.println("Successfully created home peer\n");
-
-        // create client and server
-        peer.createClient();
-        peer.createServer();
-
         MainFrame frame = new MainFrame(peer);
 
-        peer.printPeerData();
+        // create client and server
+        peer.createServer();
+        peer.createClient();
+
+
+//        peer.printPeerData();
 
     }
 }
