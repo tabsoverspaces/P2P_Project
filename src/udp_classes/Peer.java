@@ -1,6 +1,9 @@
 package udp_classes;
 
 import gui.MainFrame;
+import special_messages.EndListenModeMessage;
+import special_messages.SpecialMessage;
+import special_messages.StartListenModeMessage;
 import utility.PeerHandler;
 
 import java.net.DatagramSocket;
@@ -26,6 +29,13 @@ public class Peer {
     private UDPClient clientThread;
     private ArrayList<DatagramSocket> listOfSockets;
 
+
+    // list of special messages
+    private ArrayList<SpecialMessage> listOfSpecialMessages;
+
+    // special flags
+    private boolean canSendMessage;
+
     /**
      * Initializing constructor, used in all subsequent constructors
      * Purpose : initialize all class members
@@ -34,8 +44,15 @@ public class Peer {
         this.listOfConnectedPeers = new ArrayList<>();
         this.listOfSockets = new ArrayList<>();
         this.addresses = new HashSet<>();
+        this.listOfSpecialMessages = new ArrayList<>();
 
-        // add target peers
+
+        // stuff
+        this.canSendMessage = true;
+
+
+        // add special messages to list
+        this.addSpecialMessages();
 
     }
 
@@ -79,6 +96,22 @@ public class Peer {
         this(address);
 
         this.name = name;
+    }
+
+    public ArrayList<SpecialMessage> getListOfSpecialMessages() {
+        return listOfSpecialMessages;
+    }
+
+    public void setListOfSpecialMessages(ArrayList<SpecialMessage> listOfSpecialMessages) {
+        this.listOfSpecialMessages = listOfSpecialMessages;
+    }
+
+    public boolean canSendMessage() {
+        return canSendMessage;
+    }
+
+    public void setCanSendMessage(boolean canSendMessage) {
+        this.canSendMessage = canSendMessage;
     }
 
     /**
@@ -127,7 +160,8 @@ public class Peer {
     public void addPeer(String address) {
         try {
             InetAddress addr = InetAddress.getByName(address);
-            if (!this.addresses.contains(addr)) {
+            //make sure current peer doesnt add himself
+            if (!this.addresses.contains(addr) && !(address.equals(this.serverThread.getIpAddress()))) {
 
                 this.addresses.add(addr);
 
@@ -188,6 +222,16 @@ public class Peer {
         return peerHandler;
 
     }
+
+    private void addSpecialMessages() {
+        // create messages here
+        StartListenModeMessage startMessage = new StartListenModeMessage();
+        EndListenModeMessage endMessage = new EndListenModeMessage();
+
+        this.listOfSpecialMessages.add(startMessage);
+        this.listOfSpecialMessages.add(endMessage);
+    }
+
 }
 
 

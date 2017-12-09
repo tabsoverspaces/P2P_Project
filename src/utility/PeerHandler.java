@@ -29,13 +29,14 @@ public class PeerHandler {
     // path-related class members
     private Path currentRelativePath = Paths.get("");
     private String pathString = currentRelativePath.toAbsolutePath().toString();
-    private String savefilePath = this.pathString + "/Data/peers.txt";
+    private String savefilePath = "/Data/peers.txt";
+
 
     /**
      * @param savefilePath
      */
     public PeerHandler(String savefilePath) {
-
+        System.out.println(this.savefilePath);
 
         try {
             // the filewriter constructor creates a filewriter at the given path
@@ -43,6 +44,7 @@ public class PeerHandler {
             // if theres a false argument, or no second argument whatsover,
             // opening the filewriter will overwrite everything
             this.w = new BufferedWriter(new FileWriter(this.savefilePath, true));
+
         } catch (IOException e) {
 
             e.printStackTrace();

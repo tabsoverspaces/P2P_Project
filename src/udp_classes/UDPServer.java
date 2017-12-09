@@ -1,6 +1,7 @@
 package udp_classes;
 
 import gui.MainFrame;
+import special_messages.SpecialMessage;
 
 import java.io.IOException;
 import java.net.*;
@@ -57,7 +58,7 @@ public class UDPServer extends Thread {
 
         System.out.println("Server is running");
         System.out.println("Server address " + this.socket.getLocalAddress() + "\n");
-        
+
 
         while (this.runningFlag) {
 
@@ -65,11 +66,14 @@ public class UDPServer extends Thread {
             packet = new DatagramPacket(buffer, buffer.length);
 
             try {
-                socket.receive(packet);
+                this.socket.receive(this.packet);
                 // System.out.println("Packet received"); // put this in the logger
 
                 // check to see if sending address is known
-                this.checkPeerList(packet.getAddress());
+                this.checkPeerList(this.packet.getAddress());
+
+                // analysing received message
+                this.analyzeMessage(this.packet);
 
                 System.out.println(this.formatChatMessage(packet));
 
@@ -135,5 +139,15 @@ public class UDPServer extends Thread {
         }
     }
 
+    public String getIpAddress() {
+        return Launcher.ipadr.getLocalIPAddress();
+    }
+
+    private void analyzeMessage(DatagramPacket p) {
+        // check for all special messages
+        for (SpecialMessage m : this.mainPeer.getListOfSpecialMessages()) {
+            m.checkMessage(this.mainPeer, p);
+        }
+    }
 
 }
