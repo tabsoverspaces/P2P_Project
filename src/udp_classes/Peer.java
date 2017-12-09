@@ -223,6 +223,10 @@ public class Peer {
 
     }
 
+    /**
+     * Method used to add an instance of special message subclass
+     * to the main list upon which condition checking is done
+     */
     private void addSpecialMessages() {
         // create messages here
         StartListenModeMessage startMessage = new StartListenModeMessage();

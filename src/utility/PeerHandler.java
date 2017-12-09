@@ -29,7 +29,7 @@ public class PeerHandler {
     // path-related class members
     private Path currentRelativePath = Paths.get("");
     private String pathString = currentRelativePath.toAbsolutePath().toString();
-    private String savefilePath = "/Data/peers.txt";
+    private String savefilePath = pathString + "/Data/peers.txt";
 
 
     /**
