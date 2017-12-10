@@ -6,6 +6,7 @@ import udp_chat.Peer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
@@ -42,6 +43,9 @@ public class MainFrame extends JFrame {
         this.panel = panel;
     }
 
+    /**
+     * Method used to encapsulate all actionListener assignements that are done to the buttons
+     */
     public void addListenersToButtons() {
         this.panel.getLayeredPane().getPeersPanel().getAddPeerButton()
                 .addActionListener((ActionEvent e) -> {
@@ -69,13 +73,25 @@ public class MainFrame extends JFrame {
                     this.mainPeer.sendMessage(text);
                 });
 
+        // action listener object for the peer choosing buttons
+        /**
+         * This class' sole purpose is to provide a custom actionlistener
+         * for adding to the peer choosing buttons
+         */
+        class CustomActionListener implements ActionListener {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.this.panel.getLayeredPane().getFileTransferPanel().resetViewAction();
+            }
+        }
+        /**
+         * The following lines of code add action listener(s) to the select peer choosers
+         */
         this.panel.getLayeredPane().getFileTransferPanel().getSelectPeerButton()
                 .addActionListener((ActionEvent e) -> {
-                    this.panel.getLayeredPane().getFileTransferPanel().getPeerChooser().initPanel(this.mainPeer);
+                    this.panel.getLayeredPane().getFileTransferPanel().getPeerChooser()
+                            .initPanel(this.mainPeer, new CustomActionListener());
                 });
-    }
-
-    public void print() {
-        System.out.println("SUP BITCH MAIN FRAME LAST METHOD");
     }
 }

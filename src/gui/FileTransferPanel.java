@@ -100,12 +100,7 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
         });
 
         this.resetView.addActionListener((ActionEvent e) -> {
-
-            // hide internal panels
-            FileTransferPanel.this.peerSelectionFrame.setVisible(false);
-            FileTransferPanel.this.fileSelectionFrame.setVisible(false);
-
-            this.showAllComponents();
+            this.resetViewAction();
         });
     }
 
@@ -216,5 +211,14 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
 
     public void setPeerSelectionFrame(JInternalFrame peerSelectionFrame) {
         this.peerSelectionFrame = peerSelectionFrame;
+    }
+
+    public void resetViewAction() {
+
+        // hide internal panels
+        FileTransferPanel.this.peerSelectionFrame.setVisible(false);
+        FileTransferPanel.this.fileSelectionFrame.setVisible(false);
+
+        this.showAllComponents();
     }
 }
