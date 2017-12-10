@@ -1,6 +1,6 @@
 package special_messages;
 
-import udp_classes.Peer;
+import udp_chat.Peer;
 
 import java.net.DatagramPacket;
 

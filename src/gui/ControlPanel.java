@@ -7,6 +7,7 @@ public class ControlPanel extends JPanel implements CreatableComponents {
 
     private JButton chatButton;
     private JButton peersButton;
+    private JButton fileTransferButton;
 
     private ArrayList<JButton> buttonList;
 
@@ -18,15 +19,24 @@ public class ControlPanel extends JPanel implements CreatableComponents {
         this.buttonList = new ArrayList<>();
     }
 
+    public JButton getFileTransferButton() {
+        return fileTransferButton;
+    }
+
+    public void setFileTransferButton(JButton fileTransferButton) {
+        this.fileTransferButton = fileTransferButton;
+    }
 
     @Override
     public void createComponents() {
 
         this.chatButton = new JButton("Chat");
         this.peersButton = new JButton("Peers");
+        this.fileTransferButton = new JButton("File transfer");
 
         this.buttonList.add(this.chatButton);
         this.buttonList.add(this.peersButton);
+        this.buttonList.add(this.fileTransferButton);
 
         this.setButtonBounds();
         this.addButtons();

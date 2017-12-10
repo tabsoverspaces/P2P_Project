@@ -37,6 +37,10 @@ public class MainPanel extends JPanel implements CreatableComponents {
         this.controlPanel.getPeersButton().addActionListener((ActionEvent e) -> {
             this.layeredPane.showPeersPanel();
         });
+
+        this.controlPanel.getFileTransferButton().addActionListener((ActionEvent e) -> {
+            this.layeredPane.showFileTransferPanel();
+        });
     }
 
     public ControlPanel getControlPanel() {

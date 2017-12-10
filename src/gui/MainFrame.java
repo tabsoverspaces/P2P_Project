@@ -1,7 +1,7 @@
 package gui;
 
-import udp_classes.Launcher;
-import udp_classes.Peer;
+import udp_chat.Launcher;
+import udp_chat.Peer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,6 +67,11 @@ public class MainFrame extends JFrame {
                     // get text
                     String text = MainFrame.this.panel.getLayeredPane().getChatPanel().getTextField().getText();
                     this.mainPeer.sendMessage(text);
+                });
+
+        this.panel.getLayeredPane().getFileTransferPanel().getSelectPeerButton()
+                .addActionListener((ActionEvent e) -> {
+                    this.panel.getLayeredPane().getFileTransferPanel().getPeerChooser().initPanel(this.mainPeer);
                 });
     }
 
