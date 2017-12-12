@@ -22,6 +22,13 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
     //
     // cancelation contorl buttons
     private JButton resetView;
+    // lbels
+    private JLabel filenameLabel;
+    private JLabel peerAddressLabel;
+    //
+    private JButton sendTransferRequestButton;
+    private JLabel requestStatusLabel;
+    private JLabel timeoutLabel;
 
 
     public FileTransferPanel() {
@@ -42,6 +49,23 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
     @Override
     public void createComponents() {
 
+        // init components
+        this.initializeComponents();
+
+        // set component size and placement
+        this.setComponentBounds();
+        // set  component properties
+
+        this.setComponentProperties();
+        // add components
+        this.addComponents();
+
+        // action listeners
+        this.addActionListenerToButtons();
+        this.addActionListenerToSelectors();
+    }
+
+    private void initializeComponents() {
         this.fileChooser = new JFileChooser();
         this.peerChooser = new PeerChooser();
         this.startTransferButton = new JButton("Start file transfer");
@@ -54,17 +78,45 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
         this.peerSelectionFrame = new JInternalFrame();
         //
         this.resetView = new JButton("Hide");
+        //
+        this.filenameLabel = new JLabel("<html>Filename <br></html>");
+        this.peerAddressLabel = new JLabel("<html>Selected peer <br> </html>");
+        //
+        this.sendTransferRequestButton = new JButton("Send transfer request");
+        this.requestStatusLabel = new JLabel("Status : ");
+        this.timeoutLabel = new JLabel("Time left : ");
+    }
 
+    private void setComponentBounds() {
         this.peerChooser.setBounds(300, 50, 150, 50);
-        this.startTransferButton.setBounds(215, 150, 150, 30);
+        this.startTransferButton.setBounds(315, 250, 150, 30);
         this.progressBar.setBounds(20, 300, 740, 40);
         this.selectFileButton.setBounds(20, 50, 150, 30);
-        this.selectPeerButton.setBounds(300, 50, 150, 30);
-        this.resetView.setBounds(500, 50, 100, 30);
+        this.selectPeerButton.setBounds(610, 50, 150, 30);
+        //
+        this.resetView.setBounds(690, 10, 70, 30);
+        //
+        this.filenameLabel.setBounds(20, 80, 150, 50);
+        this.peerAddressLabel.setBounds(610, 80, 150, 50);
+
         // internal frame
         this.fileSelectionFrame.setBounds(0, 0, 500, 500);
         this.fileSelectionFrame.getContentPane().add(this.fileChooser);
         this.peerSelectionFrame.setBounds(0, 0, 500, 500);
+        //
+        this.sendTransferRequestButton.setBounds(270, 150, 250, 30);
+        this.requestStatusLabel.setBounds(270, 200, 250, 30);
+        this.timeoutLabel.setBounds(520, 200, 100, 30);
+    }
+
+    private void setComponentProperties() {
+        this.filenameLabel.setHorizontalAlignment(JLabel.CENTER);
+        this.peerAddressLabel.setHorizontalAlignment(JLabel.CENTER);
+//        this.requestStatusLabel.setHorizontalAlignment(JLabel.CENTER);
+//        this.timeoutLabel.setHorizontalAlignment(JLabel.CENTER);
+    }
+
+    private void addComponents() {
         this.peerSelectionFrame.getContentPane().add(this.peerChooser);
 
 //        this.add(this.peerChooser);
@@ -73,14 +125,19 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
         this.add(this.statusArea);
         this.add(this.selectFileButton);
         this.add(this.selectPeerButton);
+        //
         this.add(resetView);
+        //
+        this.add(this.filenameLabel);
+        this.add(this.peerAddressLabel);
 
         this.add(this.fileSelectionFrame);
         this.add(this.peerSelectionFrame);
+        //
+        this.add(this.sendTransferRequestButton);
+        this.add(this.requestStatusLabel);
+        this.add(this.timeoutLabel);
 
-        // action listeners
-        this.addActionListenerToButtons();
-        this.addActionListenerToSelectors();
     }
 
     /**
@@ -125,6 +182,12 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
         this.progressBar.setVisible(true);
         this.selectFileButton.setVisible(true);
         this.selectPeerButton.setVisible(true);
+
+        this.filenameLabel.setVisible(true);
+        this.peerAddressLabel.setVisible(true);
+        this.sendTransferRequestButton.setVisible(true);
+        this.requestStatusLabel.setVisible(true);
+        this.timeoutLabel.setVisible(true);
 
 
     }
@@ -220,5 +283,53 @@ public class FileTransferPanel extends JPanel implements CreatableComponents {
         FileTransferPanel.this.fileSelectionFrame.setVisible(false);
 
         this.showAllComponents();
+    }
+
+    public JButton getResetView() {
+        return resetView;
+    }
+
+    public void setResetView(JButton resetView) {
+        this.resetView = resetView;
+    }
+
+    public JLabel getFilenameLabel() {
+        return filenameLabel;
+    }
+
+    public void setFilenameLabel(JLabel filenameLabel) {
+        this.filenameLabel = filenameLabel;
+    }
+
+    public JLabel getPeerAddressLabel() {
+        return peerAddressLabel;
+    }
+
+    public void setPeerAddressLabel(JLabel peerAddressLabel) {
+        this.peerAddressLabel = peerAddressLabel;
+    }
+
+    public JButton getSendTransferRequestButton() {
+        return sendTransferRequestButton;
+    }
+
+    public void setSendTransferRequestButton(JButton sendTransferRequestButton) {
+        this.sendTransferRequestButton = sendTransferRequestButton;
+    }
+
+    public JLabel getRequestStatusLabel() {
+        return requestStatusLabel;
+    }
+
+    public void setRequestStatusLabel(JLabel requestStatusLabel) {
+        this.requestStatusLabel = requestStatusLabel;
+    }
+
+    public JLabel getTimeoutLabel() {
+        return timeoutLabel;
+    }
+
+    public void setTimeoutLabel(JLabel timeoutLabel) {
+        this.timeoutLabel = timeoutLabel;
     }
 }

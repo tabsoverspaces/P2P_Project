@@ -8,7 +8,7 @@ import java.net.*;
 
 public class UDPServer extends Thread {
 
-    private final int portNumber = 6969;
+    private final int PORT_NUMBER = 6969;
     private MainFrame mainFrame;
     private Peer mainPeer;
     // main server socket
@@ -29,9 +29,9 @@ public class UDPServer extends Thread {
         this.mainPeer = peer;
 
         try {
-            this.socket = new DatagramSocket(6969,
+            this.socket = new DatagramSocket(PORT_NUMBER,
                     InetAddress.getByName(Launcher.ipadr.getLocalIPAddress()));
-            System.out.println("Server socket successfully created");
+            System.out.println("Chat application : Server socket successfully created");
 
 
         } catch (SocketException e) {
@@ -56,8 +56,8 @@ public class UDPServer extends Thread {
     @Override
     public void run() {
 
-        System.out.println("Server is running");
-        System.out.println("Server address " + this.socket.getLocalAddress() + "\n");
+        System.out.println("Chat application : Server is running");
+        System.out.println("Chat application : Server address " + this.socket.getLocalAddress() + "\n");
 
 
         while (this.runningFlag) {

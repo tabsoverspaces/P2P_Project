@@ -24,9 +24,14 @@ public class PeerSelectButton extends JButton {
 
     public void addActionListenerToButton() {
         this.addActionListener((ActionEvent e) -> {
-            this.peerChooser.setSelectedAddress(this.address);
+
         });
 
+    }
+
+    @Override
+    public String toString() {
+        return this.address;
     }
 
 

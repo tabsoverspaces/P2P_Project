@@ -39,9 +39,10 @@ public abstract class SpecialMessage {
      */
     private boolean checkCondition(DatagramPacket p) {
 
-        String compareString = (p.getData().toString());
+        String compareString = new String(p.getData());
 
-        if ((compareString.equals(this.trigger))) {
+        if ((compareString.contains(this.getTrigger()))) {
+            System.out.println("true");
             return true;
         } else {
             return false;
@@ -63,6 +64,6 @@ public abstract class SpecialMessage {
      *
      * @return String object
      */
-    public abstract String setTrigger();
+    public abstract String getTrigger();
 }
 

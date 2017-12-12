@@ -42,14 +42,12 @@ public class FormatVerifier {
      * @return boolean value
      */
     public boolean verifyIPAddress(String address) {
-        boolean result = false;
 
         Matcher m = VALID_IPV4_PATTERN.matcher(address);
 
         if (m.matches()) {
             return true;
         } else {
-            System.out.println("Format false");
             return false;
         }
 

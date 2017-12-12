@@ -4,8 +4,13 @@ import gui.MainFrame;
 import special_messages.EndListenModeMessage;
 import special_messages.SpecialMessage;
 import special_messages.StartListenModeMessage;
+import udp_file_transfer.FileTransferClient;
+import udp_file_transfer.FileTransferHandler;
+import udp_file_transfer.FileTransferServer;
 import utility.PeerHandler;
 
+import java.io.File;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,7 +32,11 @@ public class Peer {
     private HashSet<InetAddress> addresses;
     private UDPServer serverThread;
     private UDPClient clientThread;
+    private FileTransferHandler fileTransferHandler;
     private ArrayList<DatagramSocket> listOfSockets;
+    private boolean canSendFile;
+    private FileTransferClient fileTransferClient;
+    private FileTransferServer fileTransferServer;
 
 
     // list of special messages
@@ -35,6 +44,10 @@ public class Peer {
 
     // special flags
     private boolean canSendMessage;
+    private boolean hasPendingFileTransfer;
+    private InetAddress pendingSender;
+    private int pendingPort;
+    private File pendingFile;
 
     /**
      * Initializing constructor, used in all subsequent constructors
@@ -49,6 +62,7 @@ public class Peer {
 
         // stuff
         this.canSendMessage = true;
+        this.canSendFile = false;
 
 
         // add special messages to list
@@ -98,6 +112,50 @@ public class Peer {
         this.name = name;
     }
 
+    public static String getSavefile() {
+        return savefile;
+    }
+
+    public boolean isCanSendFile() {
+        return canSendFile;
+    }
+
+    public void setCanSendFile(boolean v) {
+        this.canSendFile = v;
+    }
+
+    public boolean isHasPendingFileTransfer() {
+        return hasPendingFileTransfer;
+    }
+
+    public void setHasPendingFileTransfer(boolean hasPendingFileTransfer) {
+        this.hasPendingFileTransfer = hasPendingFileTransfer;
+    }
+
+    public InetAddress getPendingSender() {
+        return pendingSender;
+    }
+
+    public void setPendingSender(InetAddress pendingSender) {
+        this.pendingSender = pendingSender;
+    }
+
+    public int getPendingPort() {
+        return pendingPort;
+    }
+
+    public void setPendingPort(int pendingPort) {
+        this.pendingPort = pendingPort;
+    }
+
+    public File getPendingFile() {
+        return pendingFile;
+    }
+
+    public void setPendingFile(File pendingFile) {
+        this.pendingFile = pendingFile;
+    }
+
     public ArrayList<SpecialMessage> getListOfSpecialMessages() {
         return listOfSpecialMessages;
     }
@@ -108,10 +166,6 @@ public class Peer {
 
     public boolean canSendMessage() {
         return canSendMessage;
-    }
-
-    public void setCanSendMessage(boolean canSendMessage) {
-        this.canSendMessage = canSendMessage;
     }
 
     /**
@@ -126,19 +180,17 @@ public class Peer {
         }
     }
 
+    public void sendMessage(String message, InetAddress addr) throws UnknownHostException {
+        this.clientThread.sendMessage(message, addr, 6969);
+    }
+
     /**
      * Method used to create and instantiante the client side
      * of the peer
      */
     public void createClient() {
-        try {
-            this.clientThread = new UDPClient(this);
-            this.clientThread.startClient();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-
+        this.clientThread = new UDPClient(this);
+        this.clientThread.startClient();
     }
 
     /**
@@ -151,6 +203,20 @@ public class Peer {
         this.serverThread.startServer();
     }
 
+    public void createFileTransferServer() {
+        this.fileTransferServer = new FileTransferServer(this);
+        this.fileTransferServer.startServer();
+    }
+
+    public void createFileTransferClient() {
+        this.fileTransferClient = new FileTransferClient(this);
+        this.fileTransferClient.startClient();
+    }
+
+    public void createFileTransferHandler() {
+        this.fileTransferHandler = new FileTransferHandler(this);
+    }
+
     /**
      * Method used to add a peer to the list of known list of the
      * current(main) peer
@@ -158,6 +224,13 @@ public class Peer {
      * @param address
      */
     public void addPeer(String address) {
+
+        // test for validity
+        if (!Launcher.fv.verifyIPAddress(address)) {
+            System.out.println("Peer address format not valid! Only input IPv4 addresses.");
+            return;
+        }
+
         try {
             InetAddress addr = InetAddress.getByName(address);
             //make sure current peer doesnt add himself
@@ -171,6 +244,17 @@ public class Peer {
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void printAllPeers() {
+
+        System.out.println("Currently available peers : ");
+
+        int count = 0;
+        for (InetAddress addr : this.addresses) {
+            System.out.println(count + ". " + addr.toString());
+            count++;
         }
     }
 
@@ -200,9 +284,12 @@ public class Peer {
         this.name = name;
     }
 
-
     public InetAddress getIpAddress() {
         return this.ipAddress;
+    }
+
+    public void setIpAddress(InetAddress ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public void printPeerData() {
@@ -223,6 +310,10 @@ public class Peer {
 
     }
 
+    public static void setPeerHandler(PeerHandler peerHandler) {
+        Peer.peerHandler = peerHandler;
+    }
+
     /**
      * Method used to add an instance of special message subclass
      * to the main list upon which condition checking is done
@@ -234,6 +325,127 @@ public class Peer {
 
         this.listOfSpecialMessages.add(startMessage);
         this.listOfSpecialMessages.add(endMessage);
+    }
+
+    public MainFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public ArrayList<Peer> getListOfConnectedPeers() {
+        return listOfConnectedPeers;
+    }
+
+    public void setListOfConnectedPeers(ArrayList<Peer> listOfConnectedPeers) {
+        this.listOfConnectedPeers = listOfConnectedPeers;
+    }
+
+    public UDPServer getServerThread() {
+        return serverThread;
+    }
+
+    public void setServerThread(UDPServer serverThread) {
+        this.serverThread = serverThread;
+    }
+
+    public UDPClient getClientThread() {
+        return clientThread;
+    }
+
+    public void setClientThread(UDPClient clientThread) {
+        this.clientThread = clientThread;
+    }
+
+    public FileTransferHandler getFileTransferHandler() {
+        return fileTransferHandler;
+    }
+
+    public void setFileTransferHandler(FileTransferHandler fileTransferHandler) {
+        this.fileTransferHandler = fileTransferHandler;
+    }
+
+    public ArrayList<DatagramSocket> getListOfSockets() {
+        return listOfSockets;
+    }
+
+    public void setListOfSockets(ArrayList<DatagramSocket> listOfSockets) {
+        this.listOfSockets = listOfSockets;
+    }
+
+    public boolean isCanSendMessage() {
+        return canSendMessage;
+    }
+
+    public void setCanSendMessage(boolean canSendMessage) {
+        this.canSendMessage = canSendMessage;
+    }
+
+    public FileTransferClient getFileTransferClient() {
+        return fileTransferClient;
+    }
+
+    public void setFileTransferClient(FileTransferClient fileTransferClient) {
+        this.fileTransferClient = fileTransferClient;
+    }
+
+    public FileTransferServer getFileTransferServer() {
+        return fileTransferServer;
+    }
+
+    public void setFileTransferServer(FileTransferServer fileTransferServer) {
+        this.fileTransferServer = fileTransferServer;
+    }
+
+    public int[] getPeerIndices() {
+        int size = this.addresses.size();
+        int[] indices = new int[size];
+
+        int count = 0;
+        int index = 0;
+        for (InetAddress s : this.addresses) {
+            indices[count] = index;
+            index++;
+        }
+
+        return indices;
+    }
+
+    public boolean checkPeerIndex(int index) {
+
+        int[] array = this.getPeerIndices();
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == index) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String getPeerAt(int index) {
+        int count = 0;
+        for (InetAddress s : this.addresses) {
+            if (index == count) {
+                return s.toString();
+            } else {
+                count++;
+            }
+        }
+
+        return null;
+    }
+
+    public void setPendingFileTransfer(DatagramPacket p) {
+        this.hasPendingFileTransfer = true;
+
+        this.pendingSender = p.getAddress();
+        this.pendingPort = 9696;
+
+
     }
 
 }

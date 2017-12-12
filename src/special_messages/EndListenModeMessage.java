@@ -9,13 +9,11 @@ public class EndListenModeMessage extends SpecialMessage {
     public void applyMessage(Peer currentPeer, DatagramPacket p) {
         currentPeer.setCanSendMessage(true);
 
-        // turn off listen mode
-
-        currentPeer.sendMessage("LISTEN-MODE OFF");
+        System.out.println("LISTEN-MODE DISABLED");
     }
 
     @Override
-    public String setTrigger() {
+    public String getTrigger() {
         return "END";
     }
 }

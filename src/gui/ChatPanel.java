@@ -1,7 +1,6 @@
 package gui;
 
 import gui.custom_components.JTextAreaCustom;
-import utility.SystemOutListener;
 
 import javax.swing.*;
 
@@ -35,7 +34,7 @@ public class ChatPanel extends JPanel implements CreatableComponents {
         this.addComponents();
 
         // add system out listener
-        SystemOutListener.GetSingleton().AttachSystemOutObserver(this.textArea);
+//        SystemOutListener.GetSingleton().AttachSystemOutObserver(this.textArea);
 
     }
 

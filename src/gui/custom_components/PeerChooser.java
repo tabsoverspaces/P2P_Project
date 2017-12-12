@@ -1,6 +1,7 @@
 package gui.custom_components;
 
 import gui.CreatableComponents;
+import gui.FileTransferPanel;
 import udp_chat.Peer;
 
 import javax.swing.*;
@@ -12,16 +13,13 @@ public class PeerChooser extends JPanel implements CreatableComponents {
 
     private String selectedAddress;
 
-    private JButton backButton;
+    private FileTransferPanel ftp;
 
     public PeerChooser() {
 
         this.setLayout(new FlowLayout());
         this.setBounds(0, 0, 500, 500);
         this.setBackground(Color.RED);
-
-        this.backButton = new JButton("Back");
-        this.backButton.setBounds(0, 0, 150, 30);
 
     }
 
@@ -33,21 +31,10 @@ public class PeerChooser extends JPanel implements CreatableComponents {
         this.selectedAddress = address;
     }
 
-    public JButton getBackButton() {
-        return backButton;
-    }
-
-    public void setBackButton(JButton backButton) {
-        this.backButton = backButton;
-    }
-
-    public void initPanel(Peer peer, ActionListener l) {
+    public void initPanel(Peer peer, ActionListener l1) {
 
         // remove all prior components
         this.removeAll();
-
-        // add back button
-        this.add(this.backButton);
 
 
         // if no addresses available, add label
@@ -64,8 +51,9 @@ public class PeerChooser extends JPanel implements CreatableComponents {
             for (InetAddress p : peer.getAddresses()) {
                 PeerSelectButton b = new PeerSelectButton(p.toString());
                 b.setPeerChooser(this);
+
                 b.addActionListenerToButton();
-                b.addActionListener(l);
+                b.addActionListener(l1);
                 this.add(b);
             }
         }
@@ -73,6 +61,11 @@ public class PeerChooser extends JPanel implements CreatableComponents {
         // add action listeners
 
     }
+
+    public void setFTP(FileTransferPanel ftp) {
+        this.ftp = ftp;
+    }
+
 
     @Override
     public void createComponents() {

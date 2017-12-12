@@ -10,13 +10,11 @@ public class StartListenModeMessage extends SpecialMessage {
     public void applyMessage(Peer currentPeer, DatagramPacket p) {
         currentPeer.setCanSendMessage(false);
 
-        // show listen-mode on screen
-        // to all peers, send message showing listen mode
-        currentPeer.sendMessage("LISTEN-MODE ON");
+        System.out.println("LISTEN-MODE ENABLED BY " + p.getAddress().toString());
     }
 
     @Override
-    public String setTrigger() {
+    public String getTrigger() {
         return "STOP";
     }
 }

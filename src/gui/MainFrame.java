@@ -83,6 +83,10 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainFrame.this.panel.getLayeredPane().getFileTransferPanel().resetViewAction();
+//                MainFrame.this.mainPeer.getFileTransferHandler()
+//                        .setSelectedAddress(this.toString());
+//                MainFrame.this.panel.getLayeredPane().getFileTransferPanel()
+//                        .getPeerAddressLabel().setText(this.getClass().toString());
             }
         }
         /**

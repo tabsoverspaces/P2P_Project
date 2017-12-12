@@ -1,29 +1,26 @@
 package udp_chat;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 public class UDPClient extends Thread {
 
-    byte[] buffer = new byte[256];
     private Peer mainPeer;
 
     // class members
-    private int port = 7000;
-    //    private ArrayList<InetAddress> listOfAddresses;
     private DatagramSocket socket;
-    private InetAddress address = InetAddress.getByName("");
-    private DatagramPacket packet = null;
 
     private boolean runningFlag;
 
-    public UDPClient(Peer peer) throws UnknownHostException {
+    public UDPClient(Peer peer) {
         this.mainPeer = peer;
-        this.port = 7000;
 
         try {
             socket = new DatagramSocket();
-            System.out.println("Client socket successfully created");
+            System.out.println("Chat application : Client socket successfully created");
 
 
         } catch (SocketException e) {
@@ -31,16 +28,23 @@ public class UDPClient extends Thread {
         }
     }
 
+    public DatagramSocket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(DatagramSocket socket) {
+        this.socket = socket;
+    }
+
     @Override
     public void run() {
 
-        System.out.println("Client is running\n");
+        System.out.println("Chat application : Client is running\n");
 
         // load peers here
         this.mainPeer.setAddresses(this.mainPeer.getPeerHandler().loadPeers());
 
         while (this.runningFlag) {
-//            System.out.println("WHY CLIENT THREAD RUN METHOD");
 
             // pause
             try {
@@ -62,15 +66,19 @@ public class UDPClient extends Thread {
     }
 
     public void sendMessage(String message, InetAddress address, int portNumber) {
-        DatagramPacket packet = new DatagramPacket(message.getBytes(),
-                message.getBytes().length,
-                address, portNumber);
+        if (this.mainPeer.isCanSendMessage()) {
+            DatagramPacket packet = new DatagramPacket(message.getBytes(),
+                    message.getBytes().length,
+                    address, portNumber);
 
-        try {
-            this.socket.send(packet);
+            try {
+                this.socket.send(packet);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("LISTEN-MODE ENABLED. Cannot send messages");
         }
     }
 
